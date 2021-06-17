@@ -56,10 +56,14 @@ const isAtTheTopOfTheViewPort = (element) => {
 const buildNavigation = () => {
     const fragment = document.createDocumentFragment();
 
-    sections.forEach(function (section) {
+    sections.forEach((section) => {
         const { nav: text } = section.dataset;
+        const id = section.getAttribute('id');
         const li = document.createElement('li');
-        li.textContent = text;
+        const a = document.createElement('a');
+        a.setAttribute('href', `#${id}`);
+        a.textContent = text;
+        li.appendChild(a);
         li.classList.add(CLASSES.MENU_LINK);
         fragment.appendChild(li);
     });
@@ -85,6 +89,14 @@ const activateCurrentSection = () => {
 };
 
 // Scroll to anchor ID using scrollTO event
+navigationWrapper.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = e.target.getAttribute('href');
+    if (id) {
+        const destinationSection = document.querySelector(`${id}`);
+        destinationSection.scrollIntoView({ behavior: 'smooth'});
+    }
+});
 
 
 /**
