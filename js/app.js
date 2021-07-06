@@ -25,12 +25,15 @@ const CLASSES = {
     NAVIGATION_WRAPPER: '#navbar__list',
     MENU_LINK: 'menu__link',
     HEADER_SELECTOR: '.page__header',
+    ACTIVE_HEADER_SECTION: 'menu__active',
 };
 
 const header = document.querySelector(CLASSES.HEADER_SELECTOR);
 const sections = document.querySelectorAll(CLASSES.SECTION);
 const navigationWrapper = document.querySelector(CLASSES.NAVIGATION_WRAPPER);
 let activeSection = document.querySelector(CLASSES.ACTIVE_SELECTOR);
+let activeHeaderSection = null;
+let oldScroll = null;
 
 
 /**
@@ -44,7 +47,16 @@ const isAtTheTopOfTheViewPort = (element) => {
     return window.scrollY >= ((window.scrollY + top) - headerHeight);
 };
 
+const isScrollingUp = () => {
+    const isScrollUp = oldScroll > window.scrollY;
+    oldScroll = window.scrollY;
+    return isScrollUp;
+};
 
+const isInViewPort = (element) => {
+    const { top, bottom } = element.getBoundingClientRect();
+    return ((top < window.innerHeight) && bottom > 1);
+};
 
 /**
  * End Helper Functions
@@ -69,24 +81,50 @@ const buildNavigation = () => {
     });
 
     navigationWrapper.appendChild(fragment);
+    activateHeaderSection(activeSection);
 };
 
 
-// Add class 'active' to section when near top of viewport
+// Add an active state to your navigation items when a section is in the viewport.
+const activateHeaderSection = (section) => {
+    const id = section.getAttribute('id');
+    const destinationHeaderSection = document.querySelector(`a[href^='#${id}']`);
+    if ((activeHeaderSection !== destinationHeaderSection) && (activeHeaderSection !== null)) {
+        activeHeaderSection.parentNode.classList.remove(CLASSES.ACTIVE_HEADER_SECTION);
+    }
+    activeHeaderSection = destinationHeaderSection;
+    activeHeaderSection.parentNode.classList.add(CLASSES.ACTIVE_HEADER_SECTION);
+};
+
+
 const activateCurrentSection = () => {
+    const isScrollUp = isScrollingUp();
     for (let i = 0; i < sections.length; i++) {
-        if (sections[i] === activeSection) {
+        var c = isInViewPort(sections[i]);
+        var t = isAtTheTopOfTheViewPort(sections[i]);
+        const isActive = isInViewPort(sections[i]) && isAtTheTopOfTheViewPort(sections[i]);
+        if (!isActive) {
             continue;
         }
-        const isActive = isAtTheTopOfTheViewPort(sections[i]);
+        const currentSectionNumber = +sections[i].dataset.nav.slice(-1);
+        const activeSectionNumber = +activeSection.dataset.nav.slice(-1);
+        const isPassCondition = isScrollUp ? (activeSectionNumber < currentSectionNumber) : (currentSectionNumber < activeSectionNumber);
+        if (sections[i] === activeSection || isPassCondition) {
+            continue;
+        }
+
+        // Add class 'active' to section when near top of viewport
         sections[i].classList.toggle(CLASSES.ACTIVE, isActive);
+
         if (isActive) {
-            activeSection.classList.toggle(CLASSES.ACTIVE);
+            activeSection.classList.remove(CLASSES.ACTIVE);
             activeSection = sections[i];
+            activateHeaderSection(activeSection);
         }
     }
     return activeSection;
 };
+
 
 // Scroll to anchor ID using scrollTO event
 navigationWrapper.addEventListener('click', (e) => {
@@ -110,11 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
     buildNavigation();
 });
 
-// Scroll to section on link click
-
 
 // Set sections as active
 window.addEventListener('scroll', () => {
-    activateCurrentSection();
+    setTimeout(() => {activateCurrentSection()}, 0);
 });
 
