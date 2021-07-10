@@ -60,6 +60,13 @@ section {
     min-height: 80vh;
 }
 
+.hidden {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 1s ease-out;
+}
+
 
 /* ---- Module Rules ---- */
 

@@ -21,16 +21,19 @@
 const CLASSES = {
     ACTIVE: 'landing__active',
     ACTIVE_SELECTOR: '.landing__active',
-    SECTION: '[data-nav]',
-    NAVIGATION_WRAPPER: '#navbar__list',
+    SECTION_SELECTOR: '[data-nav]',
+    NAVIGATION_WRAPPER_SELECTOR: '#navbar__list',
     MENU_LINK: 'menu__link',
     HEADER_SELECTOR: '.page__header',
     ACTIVE_HEADER_SECTION: 'menu__active',
+    HIDDEN: 'hidden',
 };
 
+const HEADER_TIMER = 3000;
+
 const header = document.querySelector(CLASSES.HEADER_SELECTOR);
-const sections = document.querySelectorAll(CLASSES.SECTION);
-const navigationWrapper = document.querySelector(CLASSES.NAVIGATION_WRAPPER);
+const sections = document.querySelectorAll(CLASSES.SECTION_SELECTOR);
+const navigationWrapper = document.querySelector(CLASSES.NAVIGATION_WRAPPER_SELECTOR);
 let activeSection = document.querySelector(CLASSES.ACTIVE_SELECTOR);
 let activeHeaderSection = null;
 let oldScroll = null;
@@ -57,6 +60,25 @@ const isInViewPort = (element) => {
     const { top, bottom } = element.getBoundingClientRect();
     return ((top < window.innerHeight) && bottom > 1);
 };
+
+const hideHeader = () => {
+    header.classList.add(CLASSES.HIDDEN);
+};
+
+const showHeader = () => {
+    header.classList.remove(CLASSES.HIDDEN);
+};
+
+const detectScrollStop = (callback, time) => {
+    let timer = null;
+    return () => {
+        timer && clearTimeout(timer);
+        timer = setTimeout(callback, time);
+        return true;
+    }
+};
+
+const detectScrollStopInit = detectScrollStop(hideHeader, HEADER_TIMER);
 
 /**
  * End Helper Functions
@@ -100,8 +122,6 @@ const activateHeaderSection = (section) => {
 const activateCurrentSection = () => {
     const isScrollUp = isScrollingUp();
     for (let i = 0; i < sections.length; i++) {
-        var c = isInViewPort(sections[i]);
-        var t = isAtTheTopOfTheViewPort(sections[i]);
         const isActive = isInViewPort(sections[i]) && isAtTheTopOfTheViewPort(sections[i]);
         if (!isActive) {
             continue;
@@ -109,6 +129,7 @@ const activateCurrentSection = () => {
         const currentSectionNumber = +sections[i].dataset.nav.slice(-1);
         const activeSectionNumber = +activeSection.dataset.nav.slice(-1);
         const isPassCondition = isScrollUp ? (activeSectionNumber < currentSectionNumber) : (currentSectionNumber < activeSectionNumber);
+        // Preformance trick in order to get rid of checking current active section
         if (sections[i] === activeSection || isPassCondition) {
             continue;
         }
@@ -151,6 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Set sections as active
 window.addEventListener('scroll', () => {
-    setTimeout(() => {activateCurrentSection()}, 0);
+    activateCurrentSection();
+    showHeader();
+    detectScrollStopInit();
 });
 
