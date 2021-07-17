@@ -1,13 +1,15 @@
 # Landing Page Project
 
-## Table of Contents
+## Simple HTML, CSS, JS Landing Page Project
 
-* [Instructions](#instructions)
+![landing-page-project](https://img.shields.io/badge/1.0.0-landing--page--project-green)
 
-## Instructions
+[![Netlify Status](https://api.netlify.com/api/v1/badges/50b510f2-d5c4-4fe4-9a17-e3338cf916e5/deploy-status)](https://app.netlify.com/sites/vibrant-leavitt-a25587/deploys)
 
-The starter project has some HTML and CSS styling to display a static version of the Landing Page project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+## Available Scripts
 
-To get started, open `js/app.js` and start building out the app's functionality
+To install the project please clone the repo and use [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension or your prefered one in order to launch server for simple html or css. No additonal installation is required.
 
-For specific, detailed instructions, look at the project instructions in the Udacity Classroom.
+### Additional features
+
+* UI is beautified by fontawesome - [FontAwesome](https://fontawesome.com/)
