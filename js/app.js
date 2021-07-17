@@ -190,6 +190,11 @@ navigationButton.addEventListener('click', () => {
         top: 0,
         left: 0,
         behavior: 'smooth'
-      })
+      });
+
+      // activate header section and first section with circles 
+      activeSection = sections[0];
+      activeSection.classList.add(CLASSES.ACTIVE);
+      activateHeaderSection(sections[0]);
 });
 
