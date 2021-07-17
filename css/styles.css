@@ -71,6 +71,11 @@ section {
 /* ---- Module Rules ---- */
 
 /* Navigation Styles*/
+
+.navbar__menu {
+    font-size: small;
+}
+
 .navbar__menu ul {
     background: linear-gradient(0deg, rgba(136, 203, 171, 1) 0%, rgba(0, 13, 60, 1) 100%);
     padding-left: 0;
@@ -97,12 +102,17 @@ section {
     color: #000;
 }
 
-.navbar__menu .menu__link.menu__active,
-.navbar__menu .menu__link:hover {
+.navbar__menu .menu__link.menu__active {
     background: rgb(136, 203, 171);
     border-radius: 50%;
     color: #fff;
     transition: ease 0.3s all;
+}
+
+@media only screen and (min-width: 35em) {
+    .navbar__menu {
+        font-size: medium;
+    }
 }
 
 /* Header Styles */
