@@ -27,17 +27,19 @@ const CLASSES = {
     HEADER_SELECTOR: '.page__header',
     ACTIVE_HEADER_SECTION: 'menu__active',
     HIDDEN: 'hidden',
+    NAVIGATION_BUTTON_SELECTOR: '.fa-arrow-alt-circle-up',
+    ACTIVE_NAVIGATION: 'navigation__up__active',
 };
 
-const HEADER_TIMER = 3000;
+const HEADER_TIMER = 1000;
 
 const header = document.querySelector(CLASSES.HEADER_SELECTOR);
 const sections = document.querySelectorAll(CLASSES.SECTION_SELECTOR);
 const navigationWrapper = document.querySelector(CLASSES.NAVIGATION_WRAPPER_SELECTOR);
+const navigationButton = document.querySelector(CLASSES.NAVIGATION_BUTTON_SELECTOR);
 let activeSection = document.querySelector(CLASSES.ACTIVE_SELECTOR);
 let activeHeaderSection = null;
 let oldScroll = null;
-
 
 /**
  * End Global Variables
@@ -50,15 +52,15 @@ const isAtTheTopOfTheViewPort = (element) => {
     return window.scrollY >= ((window.scrollY + top) - headerHeight);
 };
 
+const isInViewPort = (element) => {
+    const { top, bottom } = element.getBoundingClientRect();
+    return ((top < window.innerHeight) && bottom > 1);
+};
+
 const isScrollingUp = () => {
     const isScrollUp = oldScroll > window.scrollY;
     oldScroll = window.scrollY;
     return isScrollUp;
-};
-
-const isInViewPort = (element) => {
-    const { top, bottom } = element.getBoundingClientRect();
-    return ((top < window.innerHeight) && bottom > 1);
 };
 
 const hideHeader = () => {
@@ -79,6 +81,11 @@ const detectScrollStop = (callback, time) => {
 };
 
 const detectScrollStopInit = detectScrollStop(hideHeader, HEADER_TIMER);
+
+const isAtTheBottomOfThePage = () => {
+    navigationButton.classList.toggle(CLASSES.ACTIVE_NAVIGATION,
+        ((window.innerHeight + window.scrollY) >= document.body.scrollHeight));
+};
 
 /**
  * End Helper Functions
@@ -175,5 +182,14 @@ window.addEventListener('scroll', () => {
     activateCurrentSection();
     showHeader();
     detectScrollStopInit();
+    isAtTheBottomOfThePage();
+});
+
+navigationButton.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
 });
 

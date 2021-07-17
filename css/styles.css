@@ -235,3 +235,20 @@ section.landing__active .landing__container::after {
         transform: rotate(360deg) translate(-1em) rotate(-360deg);
     }
 }
+
+/* Navigation Button */
+.fa-arrow-alt-circle-up {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-out;
+}
+
+.navigation__up__active {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
